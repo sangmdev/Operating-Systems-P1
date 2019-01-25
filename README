@@ -1,0 +1,27 @@
+What this program does:
+///////////////////////
+This project is practice using getopt, perror and fork()
+The program will fork off versions of itself to do some file processing. 
+The original program will read the first line of the file which tells you how many iterations are required. 
+The original program will then fork a child process that will
+	-take in the next line telling how many integers to read.
+	-Read that many integers, putting them on a stack.
+	-Write the child PID into the output file.
+	-Write the numbers in reverse order into output file.
+	-Terminate
+The original program will do this until all child procresses have terminated and then write all the pids of children it launched and its own pid to the output file. 
+///////////////////////
+
+
+How to Compile and Run Program:
+///////////////////////
+
+
+Outstanding Problems:
+/////////////////////
+
+
+Problems I encountered:
+///////////////////////
+
+
