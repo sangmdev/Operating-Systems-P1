@@ -10,12 +10,12 @@ The original program will then fork a child process that will
 	-Write the numbers in reverse order into output file.
 	-Terminate
 The original program will do this until all child procresses have terminated and then write all the pids of children it launched and its own pid to the output file. 
-///////////////////////
-
 
 How to Compile and Run Program:
 ///////////////////////
-
+-Compile program with make all or make. Clean with make clean.
+-To run the program, use gcc ./exec [options], to see options us -h option. If -h option is used, all other options are ignored.
+-To run program with input and output files do gcc ./exec -i inputFileName -o outputFileName.
 
 Outstanding Problems:
 /////////////////////
@@ -23,5 +23,5 @@ Outstanding Problems:
 
 Problems I encountered:
 ///////////////////////
-
+-Child kept reading same line from read file. (second and third lines). I think it's because the child processes are running at the same time so they are accessing at the same time, but sleep is not fixing the problem. 1/29/19
 
