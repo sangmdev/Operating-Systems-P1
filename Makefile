@@ -8,3 +8,5 @@ $(TARGET): $(OBJ)
 	$(CC) $(CFLAGS) -o exec $(OBJ) $(LIBS)
 clean:
 	rm -f *.o $(TARGET)
+	rm -f exec
+	rm -f output.dat

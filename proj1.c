@@ -4,7 +4,48 @@
 #include <string.h>
 #include <sys/wait.h>
 #include <stdlib.h>
+#include <limits.h>
 
+//Stack Structure taken from geeksforgeeks.org//
+struct Stack {
+  int top;
+  unsigned capacity;
+  int* array;
+};
+
+//function to create a stack of given capacity. It initializes size of stack as 0
+struct Stack* createStack(unsigned capacity)
+{
+  struct Stack* stack = (struct Stack*)malloc(sizeof(struct Stack));
+  stack->capacity = capacity;
+  stack->top = -1;
+  stack->array = (int*)malloc(stack->capacity * sizeof(int));
+  return stack;
+}
+//Stack is full when top is equal to last index
+int isFull(struct Stack* stack) 
+{ 
+    return stack->top == stack->capacity - 1; 
+}
+//Stack is empty when top is equal to -1
+int isEmpty(struct Stack* stack) 
+{ 
+    return stack->top == -1; 
+}
+//Function to add an item to stack, It increases top by 1
+void push(struct Stack* stack, int item) 
+{ 
+    if (isFull(stack)) 
+            return; 
+    stack->array[++stack->top] = item; 
+}
+//function to remove an item from stack. It decreases top by 1.
+int pop(struct Stack* stack) 
+{ 
+    if (isEmpty(stack)) 
+        return INT_MIN; 
+    return stack->array[stack->top--]; 
+}
 int main(int argc, char **argv){
   int c;
   char inputFileName[20] = "input.dat";
@@ -50,26 +91,40 @@ int main(int argc, char **argv){
      //Child Processes in a loop//
        pid_t child_pid, wpid;
        int status =0;
-       int stack[8];
+       int origStack[8];
+       int numOfNumsFake;
      for (i = 0; i < count; i++){
        if(i > 0){
-          sleep(10+i);
+          sleep(.5*i);
        }
        if ((child_pid = fork()) == 0) {
-	  int numOfNums;
+          FILE *fo;
+	  fo = fopen(outputFileName, "a");
+	  int numOfNums=0;
+	  int helpStack[numOfNums], k = 0;
 	  fscanf(fp, "%d", &numOfNums); 
-          for(i = 0; i < numOfNums;i++){
-	     fscanf(fp, "%d", &stack[i]);
-	     printf("%d ", stack[i]);
+
+	  struct Stack* stack = createStack(numOfNums);
+          for(k = 0; k< numOfNums; k++){
+	     fscanf(fp, "%d", &helpStack[k]);
+	     push(stack, helpStack[k]);
 	  }
-	  printf("%d\n", getpid());
+	  fprintf(fo, "%d: ", getpid());
+	  for(k = 0; k < numOfNums; k++){
+	    fprintf(fo, "%d ", pop(stack));
+	  }
+	  fprintf(fo, "\n");
 	  exit(0);
+       }
+       fscanf(fp, "%d", &numOfNumsFake);
+       int j;
+       for(j = 0; j < numOfNumsFake; j++){
+          fscanf(fp, "%d", &origStack[j]);
        }
      }
      //PARENT PROCESS//
      while((wpid = wait(&status)) > 0);
      printf("Hello from parent\n");
-
      fclose(fp);
 return 0;
 }

@@ -24,4 +24,6 @@ Outstanding Problems:
 Problems I encountered:
 ///////////////////////
 -Child kept reading same line from read file. (second and third lines). I think it's because the child processes are running at the same time so they are accessing at the same time, but sleep is not fixing the problem. 1/29/19
-
+	-The parent process now moves the file read down when the child terminates so it is the same spot after child.
+-The output is printing the correct numbers but not in the correct format.
+	-Was able to fix the problem by removing an extra integer in the input file.
