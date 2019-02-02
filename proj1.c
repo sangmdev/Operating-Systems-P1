@@ -50,6 +50,8 @@ int main(int argc, char **argv){
   int c;
   char inputFileName[20] = "input.dat";
   char outputFileName[20] = "output.dat";
+  
+  //Grabs command line arguments and based on case, does something//
   while((c = getopt(argc, argv, "hi::o::")) != -1)
      switch(c)
      {
@@ -58,18 +60,16 @@ int main(int argc, char **argv){
 	printf("-i is the input file and should have an input file name afterwards\n");
 	printf("-o is the output file and should have an output file name afterwards\n");
 	printf("If either input file name or output file name is not specified, the defaults input.dat and output.dat will be used respectively.\n");
-	printf("If -h is used, all other options will be ignored.\n");
+	printf("**If -h is used, all other options will be ignored.\n");
 	return 0;
      case 'i':
 	if(optarg != NULL){
 	   strncpy(inputFileName, optarg, sizeof(inputFileName)); 
-	   printf("%s", inputFileName);
 	   }
      	break;
      case 'o':
      	if(optarg != NULL){
 	    strncpy(outputFileName, optarg, sizeof(outputFileName));
-	    printf("%s", outputFileName);
 	}
 	break;
      case '?':
@@ -89,7 +89,7 @@ int main(int argc, char **argv){
      fscanf(fp, "%d", &count);
      
      //Child Processes in a loop//
-       pid_t child_pid, wpid;
+       pid_t child_pid[count], wpid;
        int status =0;
        int origStack[8];
        int numOfNumsFake;
@@ -97,7 +97,7 @@ int main(int argc, char **argv){
        if(i > 0){
           sleep(.5*i);
        }
-       if ((child_pid = fork()) == 0) {
+       if ((child_pid[i] = fork()) == 0) {
           FILE *fo;
 	  fo = fopen(outputFileName, "a");
 	  int numOfNums=0;
@@ -125,6 +125,14 @@ int main(int argc, char **argv){
      //PARENT PROCESS//
      while((wpid = wait(&status)) > 0);
      printf("Hello from parent\n");
+     FILE *fo;
+     fo = fopen(outputFileName, "a");
+     fprintf(fo, "My pid(parent) is: %d\n", getpid());
+     fprintf(fo, "All Children were: ");
+     for(i = 0; i<count; i++){
+        fprintf(fo, "%d ", child_pid[i]);
+     }
+     fprintf(fo, "\n");
      fclose(fp);
 return 0;
 }
