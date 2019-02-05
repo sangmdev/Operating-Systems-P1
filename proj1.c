@@ -5,7 +5,7 @@
 #include <sys/wait.h>
 #include <stdlib.h>
 #include <limits.h>
-
+#include <errno.h>
 //Stack Structure taken from geeksforgeeks.org//
 struct Stack {
   int top;
@@ -48,9 +48,14 @@ int pop(struct Stack* stack)
 }
 int main(int argc, char **argv){
   int c;
-  char inputFileName[20] = "input.dat";
-  char outputFileName[20] = "output.dat";
-  
+  char *defaultInputFileName = "input.dat", *inputFileName;
+  char *defaultOutputFileName = "output.dat", *outputFileName;
+  int iflag=0, oflag=0;
+  //char *errorMessage;  
+  /*errorMessage = argv[0];
+  strcat(errorMessage, ":Error");
+  printf("%s\n", errorMessage);
+*/
   //Grabs command line arguments and based on case, does something//
   while((c = getopt(argc, argv, "hi::o::")) != -1)
      switch(c)
@@ -63,29 +68,34 @@ int main(int argc, char **argv){
 	printf("**If -h is used, all other options will be ignored.\n");
 	return 0;
      case 'i':
-	if(optarg != NULL){
-	   strncpy(inputFileName, optarg, sizeof(inputFileName)); 
-	   }
-     	break;
+     	inputFileName = optarg;
+	iflag = 1;
+	break;
      case 'o':
-     	if(optarg != NULL){
-	    strncpy(outputFileName, optarg, sizeof(outputFileName));
-	}
+	outputFileName = optarg;
+	oflag = 1;
 	break;
      case '?':
-	printf("invalid option used");
+       //	perror(errorMessage);
 	return 0;
 	break;
      default:
-        printf("getopt didn't work");
-	return 0;
-	break;
+	abort();
      }
-     
      //BEGIN FILE PROCESSING//
      FILE *fp;
      int count = 0, i;
-     fp = fopen(inputFileName, "r");
+     if(iflag == 0){
+       fp = fopen(defaultInputFileName, "r");
+     }
+     else{
+       fp = fopen(inputFileName, "r");
+     }
+     /*
+     if(fp == NULL){
+        perror(errorMessage);
+     }
+    */ 
      fscanf(fp, "%d", &count);
      
      //Child Processes in a loop//
@@ -95,11 +105,16 @@ int main(int argc, char **argv){
        int numOfNumsFake;
      for (i = 0; i < count; i++){
        if(i > 0){
-          sleep(.5*i);
+          sleep(1*i);
        }
        if ((child_pid[i] = fork()) == 0) {
           FILE *fo;
-	  fo = fopen(outputFileName, "a");
+	  if(oflag == 0){
+	    fo = fopen(defaultOutputFileName, "a");
+	  }
+	  else{
+	    fo = fopen(outputFileName, "a");
+	  }
 	  int numOfNums=0;
 	  int helpStack[numOfNums], k = 0;
 	  fscanf(fp, "%d", &numOfNums); 
@@ -126,7 +141,12 @@ int main(int argc, char **argv){
      while((wpid = wait(&status)) > 0);
      printf("Hello from parent\n");
      FILE *fo;
-     fo = fopen(outputFileName, "a");
+     if(oflag == 0){
+       fo = fopen(defaultOutputFileName, "a");
+     }
+     else{
+       fo = fopen(outputFileName, "a");
+     }
      fprintf(fo, "My pid(parent) is: %d\n", getpid());
      fprintf(fo, "All Children were: ");
      for(i = 0; i<count; i++){
