@@ -28,3 +28,4 @@ Problems I encountered:
 -The output is printing the correct numbers but not in the correct format.
 	-Was able to fix the problem by removing an extra integer in the input file.
 -Previous fix of problem will not be okay, turns out we have to deal with this as an error.
+

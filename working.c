@@ -160,20 +160,10 @@ int main(int argc, char **argv){
 	  else{
 	    fo = fopen(outputFileName, "a");
 	  }
-	  fgets(str, 100, fp);
-          int stringCount = stringCounter(str);
-	  printf("%d", stringCount);
-	  if(stringCount < 1){
-	     printf("Error2:No number found\n");
-	     return(-1);
-	  }
-	  else if(stringCount > 1){
-	     printf("Error2: Too many numbers!\n");
-	     return(-1);
-	  }
-	  int numOfNums = atoi(str);
-	  int k;
-	  int helpStack[numOfNums];
+	  int numOfNums=0;
+	  int helpStack[numOfNums], k = 0;
+	  fscanf(fp, "%d", &numOfNums); 
+
 	  struct Stack* stack = createStack(numOfNums);
           for(k = 0; k< numOfNums; k++){
 	     fscanf(fp, "%d", &helpStack[k]);
@@ -186,8 +176,11 @@ int main(int argc, char **argv){
 	  fprintf(fo, "\n");
 	  exit(0);
        }
-       fgets(str, 100, fp);
-       fgets(str, 100, fp);
+       fscanf(fp, "%d", &numOfNumsFake);
+       int j;
+       for(j = 0; j < numOfNumsFake; j++){
+          fscanf(fp, "%d", &origStack[j]);
+       }
      }
      //PARENT PROCESS//
      while((wpid = wait(&status)) > 0);

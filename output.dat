@@ -1,0 +1,35 @@
+7498: 3 1 8 107 6 3 
+7499: 50 3 1 4 
+7501: 5 3 5 7 
+My pid(parent) is: 7497
+All Children were: 7498 7499 7501 
+7726: 50 3 1 4 
+7725: 3 1 8 107 6 3 
+7728: 5 3 5 7 
+My pid(parent) is: 7724
+All Children were: 7725 7726 7728 
+7781: 3 1 8 107 6 3 
+My pid(parent) is: 7780
+All Children were: 7781 7782 7786 
+7820: 3 1 8 107 6 3 
+My pid(parent) is: 7819
+All Children were: 7820 7821 7824 
+7966: 3 1 8 107 6 3 
+My pid(parent) is: 7965
+All Children were: 7966 7967 7969 
+8205: 3 1 8 107 6 3 
+My pid(parent) is: 8204
+All Children were: 8205 8206 8216 
+8268: 3 1 8 107 6 3 
+My pid(parent) is: 8267
+All Children were: 8268 8269 8272 
+8396: 3 1 8 107 6 3 
+8397: 4 50 3 1 
+8402: 1 9 8 7 5 3 5 
+My pid(parent) is: 8395
+All Children were: 8396 8397 8402 
+8435: 3 1 8 107 6 3 
+8436: 4 50 3 1 
+8438: 1 9 8 7 5 3 5 
+My pid(parent) is: 8434
+All Children were: 8435 8436 8438 
