@@ -121,7 +121,7 @@ int main(int argc, char **argv){
 
      //checks if the file exists
      if(fp == NULL){
-        perror("broken");
+        perror("Error:");
 	return(-1);
      }
 
@@ -150,7 +150,7 @@ int main(int argc, char **argv){
        int i;
      for (i = 0; i < forkCount; i++){
        if(i > 0){
-          sleep(.7*i);
+          sleep(1*i);
        }
        if ((child_pid[i] = fork()) == 0) {
           FILE *fo;
@@ -162,7 +162,6 @@ int main(int argc, char **argv){
 	  }
 	  fgets(str, 100, fp);
           int stringCount = stringCounter(str);
-	  printf("%d", stringCount);
 	  if(stringCount < 1){
 	     printf("Error2:No number found\n");
 	     return(-1);
@@ -173,17 +172,38 @@ int main(int argc, char **argv){
 	  }
 	  int numOfNums = atoi(str);
 	  int k;
-	  int helpStack[numOfNums];
-	  struct Stack* stack = createStack(numOfNums);
-          for(k = 0; k< numOfNums; k++){
-	     fscanf(fp, "%d", &helpStack[k]);
+	  int helpStack[100];
+          char newStr[100];
+	  fgets(newStr, 100, fp);
+	  int newStrCount = stringCounter(newStr);
+	  printf("Banana: %d %d\n",numOfNums, newStrCount);
+	  if(newStrCount > numOfNums){
+	     printf("Too many numbers in the file\n");
+	     //return(-1);
+	  }
+	  else if(newStrCount > numOfNums){
+	     printf("Not enough numbers in the file\n");
+	     //return (-1);
+	  }
+	  struct Stack* stack = createStack(100);
+          /*
+	  for(k = 0; k< numOfNums; k++){
+	     sscanf(newStr, "%d", &helpStack[k]);
 	     push(stack, helpStack[k]);
 	  }
+	 */ 
+	  FILE *stream;
+	  stream = fmemopen(newStr, strlen(newStr), "r");
+	  for(k = 0; k<numOfNums; k++){
+	     fscanf(stream, "%d", &helpStack[k]);
+	     push(stack, helpStack[k]);
+	     }
 	  fprintf(fo, "%d: ", getpid());
 	  for(k = 0; k < numOfNums; k++){
 	    fprintf(fo, "%d ", pop(stack));
 	  }
 	  fprintf(fo, "\n");
+	  fclose(stream);
 	  exit(0);
        }
        fgets(str, 100, fp);
