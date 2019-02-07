@@ -7,7 +7,7 @@
 #include <limits.h>
 #include <errno.h>
 #include <string.h>
-
+#include <ctype.h>
 //Function that takes in a string and tells you how many numbers is in it//
 int stringCounter(char *str){
    int i, stringCount = 0;
@@ -100,9 +100,10 @@ int main(int argc, char **argv){
 	oflag = 1;
 	break;
      case '?':
-       	//perror(errorMessage);
-	return 0;
-	break;
+	  fprintf(stderr, "%s:Error:", argv[0]);
+	  perror("");
+	  return 1;
+	  break;
      default:
 	abort();
      }
@@ -121,23 +122,25 @@ int main(int argc, char **argv){
 
      //checks if the file exists
      if(fp == NULL){
-        perror("Error:");
-	return(-1);
+        fprintf(stderr, "%s: Error:", argv[0]);
+	perror("");
      }
 
      //Grabs the first line in the file.
      char str[100];
      int stringCount = 0;
      fgets(str, 100, fp);
-     printf("%s", str);
+     //printf("%s", str);
+     //Get the number of numbers in the string
      stringCount = stringCounter(str);
+     //Error checks that there is only 1 number in first line
      if(stringCount < 1){
-        printf("Error:no number found");
-	return(-1);
+        fprintf(stderr,"%s:Error:There is no number in the first line!\n",argv[0]);
+        return 1;
      }
      else if(stringCount > 1){
-        printf("too many numbers");
-	return(-1);
+        fprintf(stderr, "%s:Error:There is more than one number in the first line!\n",argv[0]);
+     	return 1;
      }
      int forkCount=0;
      forkCount = atoi(str); 
@@ -145,10 +148,10 @@ int main(int argc, char **argv){
      //Child Processes in a loop//
        pid_t child_pid[forkCount], wpid;
        int status =0;
-       int origStack[8];
-       int numOfNumsFake;
        int i;
+     //Forks amount of children based on the number in the first line
      for (i = 0; i < forkCount; i++){
+       //Guarantees that the child programs are completed in the correct order.
        if(i > 0){
           sleep(1*i);
        }
@@ -160,38 +163,37 @@ int main(int argc, char **argv){
 	  else{
 	    fo = fopen(outputFileName, "a");
 	  }
+	  //grabs next line in the file and make sure theres only 1 number
 	  fgets(str, 100, fp);
           int stringCount = stringCounter(str);
 	  if(stringCount < 1){
-	     printf("Error2:No number found\n");
-	     return(-1);
+	     fprintf(stderr,"%s:Error:No number found that denotes how many numbers follow!\n",argv[0]);
+	     return(1);
 	  }
 	  else if(stringCount > 1){
-	     printf("Error2: Too many numbers!\n");
-	     return(-1);
+	     fprintf(stderr,"%s:Error:Too many numbers to denote how many numbers follow!\n",argv[0]);
+	     return(1);
 	  }
 	  int numOfNums = atoi(str);
 	  int k;
 	  int helpStack[100];
           char newStr[100];
+	  //grabs the next line and makes sure that it has the correct number of values based on previous line's number
 	  fgets(newStr, 100, fp);
 	  int newStrCount = stringCounter(newStr);
-	  printf("Banana: %d %d\n",numOfNums, newStrCount);
+	  //printf("Banana: %d %d\n",numOfNums, newStrCount);
 	  if(newStrCount > numOfNums){
-	     printf("Too many numbers in the file\n");
-	     //return(-1);
+	     fprintf(stderr,"%s:Error: More numbers than previous line stated!\n",argv[0]);
+	     return(1);
 	  }
 	  else if(newStrCount > numOfNums){
-	     printf("Not enough numbers in the file\n");
-	     //return (-1);
+	     fprintf(stderr,"%s:Error:Not enough numbers than previous line stated!\n",argv[0]);
+	     return (1);
 	  }
+	  //Creates a stack
 	  struct Stack* stack = createStack(100);
-          /*
-	  for(k = 0; k< numOfNums; k++){
-	     sscanf(newStr, "%d", &helpStack[k]);
-	     push(stack, helpStack[k]);
-	  }
-	 */ 
+	  //Opens up a temporary file that reads in the string of integers.
+	  //Then pushes each integer onto the stack and then pop each one and print to output file.
 	  FILE *stream;
 	  stream = fmemopen(newStr, strlen(newStr), "r");
 	  for(k = 0; k<numOfNums; k++){
@@ -206,12 +208,13 @@ int main(int argc, char **argv){
 	  fclose(stream);
 	  exit(0);
        }
+       //Moves the file pointer forward two lines.
        fgets(str, 100, fp);
        fgets(str, 100, fp);
      }
      //PARENT PROCESS//
+     //Wait until all child programs are done. 
      while((wpid = wait(&status)) > 0);
-     printf("Hello from parent\n");
      FILE *fo;
      if(oflag == 0){
        fo = fopen(defaultOutputFileName, "a");

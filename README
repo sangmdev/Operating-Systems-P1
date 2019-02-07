@@ -14,8 +14,9 @@ The original program will do this until all child procresses have terminated and
 How to Compile and Run Program:
 ///////////////////////
 -Compile program with make all or make. Clean with make clean.
--To run the program, use gcc ./exec [options], to see options us -h option. If -h option is used, all other options are ignored.
--To run program with input and output files do gcc ./exec -i inputFileName -o outputFileName.
+-To run the program, use ./exec [options], to see options use -h option. If -h option is used, all other options are ignored.
+-To run program with your own input or output files do ./exec -i inputFileName -o outputFileName.
+
 
 Outstanding Problems:
 /////////////////////
@@ -28,4 +29,5 @@ Problems I encountered:
 -The output is printing the correct numbers but not in the correct format.
 	-Was able to fix the problem by removing an extra integer in the input file.
 -Previous fix of problem will not be okay, turns out we have to deal with this as an error.
+	-Was able to alert the user that number of numbers is incorrect.
 
