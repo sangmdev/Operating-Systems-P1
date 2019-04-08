@@ -184,11 +184,11 @@ int main(int argc, char **argv){
 	  //printf("Banana: %d %d\n",numOfNums, newStrCount);
 	  if(newStrCount > numOfNums){
 	     fprintf(stderr,"%s:Error: More numbers than previous line stated!\n",argv[0]);
-	     return(1);
+	     exit(1);
 	  }
 	  else if(newStrCount > numOfNums){
 	     fprintf(stderr,"%s:Error:Not enough numbers than previous line stated!\n",argv[0]);
-	     return (1);
+	     exit(1);
 	  }
 	  //Creates a stack
 	  struct Stack* stack = createStack(100);

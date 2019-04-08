@@ -21,7 +21,6 @@ How to Compile and Run Program:
 Outstanding Problems:
 /////////////////////
 
-
 Problems I encountered:
 ///////////////////////
 -Child kept reading same line from read file. (second and third lines). I think it's because the child processes are running at the same time so they are accessing at the same time, but sleep is not fixing the problem. 1/29/19
